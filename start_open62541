@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "Running from: $(pwd)"
+
+mkdir -p trusted 
+mkdir -p issuers 
+
+docker build ./ --tag open62541
+./create_client_cert
+
+sleep 3 && ./client.py & \
+docker run -it -p 4840:4840 -v "$(pwd)/issuers/":/home/open62541/issuers/ -v "$(pwd)/trusted/":/home/open62541/trusted/ open62541 

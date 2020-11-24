@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# I'm not bothering with a root CA, in issuing
+# Would be handy for lots of connections
+
+# CA Private Key
+#openssl genrsa -out myCA.key 2048
+
+# CA root cert
+#openssl req -x509 -new -nodes \
+#    -subj "/C=AU/ST=WA/L=Perth/O=open62541/CN=open62541.ca" \
+#    -key myCA.key -sha256 -days 1825 -out myCA.pem
+
+openssl req -new -newkey rsa:4096 -outform der -days 365 -nodes -x509 \
+    -subj "/C=AU/ST=WA/L=Perth/O=open62541/CN=open62541.client" \
+    -addext "subjectAltName=URI:urn:FreeOpcUa:python-opcua" \
+    -keyout client_key.pem -out client.der
+
+cp client.der ./trusted/client.der
